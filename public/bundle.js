@@ -14,10 +14,66 @@ var userWord;
 var testWord;
 
 initiateWords();
+
+function initiateWords(){ 
+    for(let i = 0; i<3; i++){
+        newRow(i);
+    }
+}
+
 function newRow(ind){
     for(let j = 0; j<9; j++){
         $(".row").eq(ind).append('<div class="word"><p>' + randomWords() + '</p></div>');
     }
+}
+
+$(".wordBox").on("keydown", function(event){
+    if(!gameStarted){
+        startTimer(testTime);
+    }
+    $(".word").eq(currentWordIndex).addClass("currentWord");
+    if(event.key === " "){
+        checkWord();
+        $(".wordBox").val("");
+    }
+    if($(".wordBox").val().includes(" ")){
+        $(".wordBox").val("");
+    }
+});
+
+function updateCurrentWord(correct){
+    $(".word").eq(currentWordIndex).removeClass("currentWord");
+    if(correct){
+        correctWords++;
+        correctWordsLength+=testWord.length + 1;
+        $(".correctWords").eq(0).text("Correct: " + correctWords);
+        $(".word").eq(currentWordIndex).addClass("correctWord");
+    } else {
+        incorrectWords++;
+        incorrectWordsLength+=testWord.length + 1;
+        $(".incorrectWords").eq(0).text("Incorrect: " + incorrectWords);
+        $(".word").eq(currentWordIndex).addClass("wrongWord");
+    }
+}
+ 
+function updateIndex(corr){
+    updateCurrentWord(corr);
+    if(currentWordIndex === 17){
+        currentWordIndex = 9;
+        $(".row").eq(0).remove();
+        $(".wordBox").eq(0).before('<div class="row"></div>');
+        newRow(2);
+    } else {
+        currentWordIndex++;
+    }
+    
+    $(".word").eq(currentWordIndex).addClass("currentWord");
+}
+
+function checkWord(){
+    userWord = $(".wordBox").val();
+    testWord = $(".currentWord").first().text();
+    updateIndex(userWord === testWord);
 }
 
 function startTimer(milliSec){
@@ -52,60 +108,9 @@ function gameDone(time){
 }
 
 
-function initiateWords(){ 
-    for(let i = 0; i<3; i++){
-        newRow(i);
-    }
-}
-
-$(".wordBox").on("keydown", function(event){
-    if(!gameStarted){
-        startTimer(testTime);
-    }
-    $(".word").eq(currentWordIndex).addClass("currentWord");
-    if(event.key === " "){
-        checkWord();
-        $(".wordBox").val("");
-    }
-    if($(".wordBox").val().includes(" ")){
-        $(".wordBox").val("");
-    }
-});
-
-function updateCurrentWord(correct){
-    $(".word").eq(currentWordIndex).removeClass("currentWord");
-    if(correct){
-        correctWords++;
-        correctWordsLength+=testWord.length + 1;
-        $(".correctWords").eq(0).text("Correct: " + correctWords);
-        $(".word").eq(currentWordIndex).addClass("correctWord");
-    } else {
-        incorrectWords++;
-        incorrectWordsLength+=testWord.length + 1;
-        $(".incorrectWords").eq(0).text("Incorrect: " + incorrectWords);
-        $(".word").eq(currentWordIndex).addClass("wrongWord");
-    }
-}
 
 
-function updateIndex(corr){
-    updateCurrentWord(corr);
-    if(currentWordIndex === 17){
-        currentWordIndex = 9;
-        $(".row").eq(0).remove();
-        $(".wordBox").eq(0).before('<div class="row"></div>');
-        newRow(2);
-    } else {
-        currentWordIndex++;
-    }
-    
-    $(".word").eq(currentWordIndex).addClass("currentWord");
-}
-function checkWord(){
-    userWord = $(".wordBox").val();
-    testWord = $(".currentWord").first().text();
-    updateIndex(userWord === testWord);
-}
+
 
 },{"random-words":3,"tiny-timer":4}],2:[function(require,module,exports){
 module.exports=function(n){return{all:n=n||new Map,on:function(e,t){var i=n.get(e);i&&i.push(t)||n.set(e,[t])},off:function(e,t){var i=n.get(e);i&&i.splice(i.indexOf(t)>>>0,1)},emit:function(e,t){(n.get(e)||[]).slice().map(function(n){n(t)}),(n.get("*")||[]).slice().map(function(n){n(e,t)})}}};
