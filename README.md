@@ -1,5 +1,5 @@
 # hello-typing
-AP CSA Final Project
+https://hellotyping.herokuapp.com/
 You're going to want to have a look at these files:
 /index.js
 /server.js
