@@ -19,7 +19,7 @@ app.post("/", function(req, res){
     var testTimeInSec = Number(req.body.time)/1000;
     var testTimeInMin = testTimeInSec/60;
     var grossWpm = Math.round(((correctWordsLength + incorrectWordsLength)/5)/testTimeInMin);
-    var netWpm = Math.round(grossWpm - (incorrectWords/testTimeInMin));
+    var netWpm = Math.round(((correctWordsLength)/5)/testTimeInMin);
     var accuracy = Math.round(correctWordsLength/(correctWordsLength+incorrectWordsLength)*100);
     res.render('result.ejs', {nWpm: netWpm,
                               gWpm: grossWpm,
